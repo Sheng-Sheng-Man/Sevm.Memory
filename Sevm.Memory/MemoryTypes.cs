@@ -77,8 +77,7 @@ namespace Sevm {
         /// <summary>
         /// 数值
         /// </summary>
-        Value = 0x99,
-
+        Value = 0x31,
 
     }
 }

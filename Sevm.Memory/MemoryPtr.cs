@@ -21,9 +21,14 @@ namespace Sevm {
         public int Size { get; set; }
 
         /// <summary>
+        /// 关联内容
+        /// </summary>
+        public long Content { get; set; }
+
+        /// <summary>
         /// 指针地址
         /// </summary>
-        public IntPtr IntPtr { get; set; }
+        public IntPtr IntPtr { get { return new IntPtr(this.Content); } set { this.Content = (long)value; } }
 
         /// <summary>
         /// 相关的整型指针
@@ -218,6 +223,9 @@ namespace Sevm {
                 case MemoryTypes.Double:
                     *this.DoublePtr += *ptr.DoublePtr;
                     break;
+                case MemoryTypes.Value:
+                    *this.DoublePtr += ptr.Content;
+                    break;
                 default: throw new Exception($"指针类型'{this.Type.ToString()}'不支持运算");
             }
         }
@@ -244,6 +252,9 @@ namespace Sevm {
                     break;
                 case MemoryTypes.Double:
                     *this.DoublePtr -= *ptr.DoublePtr;
+                    break;
+                case MemoryTypes.Value:
+                    *this.DoublePtr -= ptr.Content;
                     break;
                 default: throw new Exception($"指针类型'{this.Type.ToString()}'不支持运算");
             }
@@ -272,6 +283,9 @@ namespace Sevm {
                 case MemoryTypes.Double:
                     *this.DoublePtr *= *ptr.DoublePtr;
                     break;
+                case MemoryTypes.Value:
+                    *this.DoublePtr *= ptr.Content;
+                    break;
                 default: throw new Exception($"指针类型'{this.Type.ToString()}'不支持运算");
             }
         }
@@ -298,6 +312,9 @@ namespace Sevm {
                     break;
                 case MemoryTypes.Double:
                     *this.DoublePtr /= *ptr.DoublePtr;
+                    break;
+                case MemoryTypes.Value:
+                    *this.DoublePtr /= ptr.Content;
                     break;
                 default: throw new Exception($"指针类型'{this.Type.ToString()}'不支持运算");
             }

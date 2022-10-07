@@ -182,13 +182,20 @@ namespace Sevm {
         /// <param name="value"></param>
         /// <returns></returns>
         public void Set(MemoryPtr ptr, double value) {
+            // 目标为整型，也直接赋值
+            if (ptr.Type == MemoryTypes.Value) {
+                ptr.Content = (long)value;
+                return;
+            }
             // 目标为双精度，则直接赋值
             if (ptr.Type == MemoryTypes.Double) {
                 *ptr.DoublePtr = value;
+                return;
             }
             // 目标为整型，也直接赋值
             if (ptr.Type == MemoryTypes.Integer) {
                 *ptr.IntegerPtr = (int)value;
+                return;
             }
             // 否则创建一个新的虚拟内存
             var res = CreateDouble(value);
@@ -230,7 +237,7 @@ namespace Sevm {
                             Set(ptr, *value.DoublePtr);
                             return;
                         case MemoryTypes.Value:
-                            Set(ptr, (double)value.IntPtr);
+                            Set(ptr, (double)value.Content);
                             return;
                         case MemoryTypes.None:
                         case MemoryTypes.String:
@@ -245,6 +252,21 @@ namespace Sevm {
                         default: throw new Exception($"尚未支持的源数据类型'{value.Type.ToString()}'");
                     }
                 #endregion
+                case MemoryTypes.Value:
+                    #region [=====目标为值类型=====]
+                    switch (value.Type) {
+                        case MemoryTypes.Integer:
+                            ptr.Content = *value.IntegerPtr;
+                            return;
+                        case MemoryTypes.Double:
+                            ptr.Content = (long)*value.DoublePtr;
+                            return;
+                        case MemoryTypes.Value:
+                            ptr.Content = value.Content;
+                            return;
+                        default: throw new Exception($"尚未支持数据类型'{value.Type.ToString()}'赋值给数据类型'{ptr.Type.ToString()}'");
+                    }
+                #endregion
                 case MemoryTypes.Integer:
                     #region [=====目标为整型=====]
                     switch (value.Type) {
@@ -253,6 +275,9 @@ namespace Sevm {
                             return;
                         case MemoryTypes.Double:
                             *ptr.IntegerPtr = (int)*value.DoublePtr;
+                            return;
+                        case MemoryTypes.Value:
+                            *ptr.IntegerPtr = (int)value.Content;
                             return;
                         default: throw new Exception($"尚未支持数据类型'{value.Type.ToString()}'赋值给数据类型'{ptr.Type.ToString()}'");
                     }
@@ -265,6 +290,9 @@ namespace Sevm {
                             return;
                         case MemoryTypes.Double:
                             *ptr.DoublePtr = *value.DoublePtr;
+                            return;
+                        case MemoryTypes.Value:
+                            *ptr.DoublePtr = value.Content;
                             return;
                         default: throw new Exception($"尚未支持数据类型'{value.Type.ToString()}'赋值给数据类型'{ptr.Type.ToString()}'");
                     }

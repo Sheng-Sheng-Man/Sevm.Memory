@@ -5,7 +5,7 @@
     <Nullable>disable</Nullable>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <Version>1.0.2209.20</Version>
+    <Version>1.1.2210.24</Version>
     <Description>脚本执行虚拟机的虚拟内存管理器</Description>
     <Authors>Uncle Zheng</Authors>
     <PackageIcon>script.png</PackageIcon>
